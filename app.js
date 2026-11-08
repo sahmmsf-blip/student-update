@@ -68,7 +68,7 @@ async function go(){
    <div class="lcard" id="lc">${loginForm()}</div></section>
   <section class="wrap" id="how" style="max-width:1240px;padding:10px 18px 0"><div class="card"><h2>كيف تعمل؟</h2><div class="sub">ثلاث خطوات بسيطة</div>
     <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
-     <div class="kid" style="display:block"><b>١ — أدخل بيانات الطالب</b><div class="mt">الرقم الوطني وتاريخ الميلاد كما في الهوية.</div></div>
+     <div class="kid" style="display:block"><b>١ — أدخل بيانات الطالب</b><div class="mt">الرقم الوطني للطالب وتاريخ ميلاده.</div></div>
      <div class="kid" style="display:block"><b>٢ — حدّث بيانات التواصل</b><div class="mt">اسمك ومهنتك وهاتفك، وشخص آخر للمتابعة.</div></div>
      <div class="kid" style="display:block"><b>٣ — أكّد وتعهّد</b><div class="mt">راجع البيانات ثم أكّد صحتها وسيتم حفظها.</div></div></div></div>
    <div class="card" id="privacy"><h2>الخصوصية والأمان</h2><div class="sub">تُحفظ بياناتك في قاعدة بيانات مشفّرة لدى المدرسة، ولا يطّلع عليها إلا المخوّلون من الإدارة والمرشد التربوي، ولا تُستخدم لأي غرض خارج العملية التعليمية.</div></div></section>
@@ -77,9 +77,9 @@ async function go(){
 }
 let LG={nid:"",dob:""};
 function loginForm(msg){
-  return `<div class="lhead"><div class="ic">${ICON.id}</div><div><h2>تسجيل الدخول</h2><small>بالرقم الوطني وتاريخ الميلاد</small></div></div>
-  <div class="field"><label for="nid">الرقم الوطني</label><div class="rel"><input class="inp" id="nid" inputmode="numeric" autocomplete="off" dir="ltr" maxlength="10" placeholder="••••••••••"><span class="cnt" id="cn">0/10</span></div><div class="errt" id="e1"></div></div>
-  <div class="field"><label>تاريخ الميلاد</label>${dateSel("dobS")}<div class="errt" id="e2"></div></div>
+  return `<div class="lhead"><div class="ic">${ICON.id}</div><div><h2>تسجيل الدخول</h2><small>بالرقم الوطني للطالب وتاريخ ميلاده</small></div></div>
+  <div class="field"><label for="nid">الرقم الوطني للطالب</label><div class="rel"><input class="inp" id="nid" inputmode="numeric" autocomplete="off" dir="ltr" maxlength="10" placeholder="••••••••••"><span class="cnt" id="cn">0/10</span></div><div class="errt" id="e1"></div></div>
+  <div class="field"><label>تاريخ ميلاد الطالب</label>${dateSel("dobS")}<div class="errt" id="e2"></div></div>
   <div id="lm">${msg||""}</div>
   <div class="actions" style="margin-top:18px"><button class="btn block" id="lg">دخول ${ICON.arrow}</button></div>
   <div class="help"><button type="button" id="hb">${ICON.help} لا أستطيع الدخول؟</button></div><div id="tipbox"></div>
@@ -88,7 +88,7 @@ function loginForm(msg){
 function wireLogin(){
   const n=$("#nid"); n.oninput=()=>{n.value=digits(n.value,10); $("#cn").textContent=n.value.length+"/10"};
   $("#lg").onclick=loginGo; n.onkeydown=e=>{if(e.key==="Enter")loginGo()};
-  $("#hb").onclick=()=>{$("#tipbox").innerHTML=`<div class="tip">تأكد من كتابة الرقم الوطني للطالب (10 أرقام) واختيار تاريخ ميلاده كما في الهوية. إذا استمرت المشكلة تواصل مع المدرسة.</div>`};
+  $("#hb").onclick=()=>{$("#tipbox").innerHTML=`<div class="tip">تأكد من كتابة الرقم الوطني للطالب (وليس ولي الأمر) واختيار تاريخ ميلاد الطالب كما في الهوية. إذا استمرت المشكلة تواصل مع المدرسة.</div>`};
 }
 async function loginGo(){
   const nid=digits($("#nid").value,10), dob=readDate("dobS"); let ok=true;
