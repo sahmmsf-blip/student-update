@@ -34,6 +34,7 @@ const ICON={
  help:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg>',
  arrow:'<svg class="i" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>',
  spark:'<svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg>',
+ users:'<svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4 1.5 4.5 4.5"/></svg>',
  book:'<svg class="i" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>'};
 const MONTHS=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"];
 function dateSel(id){ const y=new Date().getFullYear();
@@ -60,6 +61,10 @@ async function go(){
   chrome("بوابة أولياء الأمور");
   const closed=!SET.form_open||(SET.deadline&&SET.deadline<new Date().toISOString().slice(0,10));
   app.innerHTML=`
+  <div class="banner"><div class="note"><div class="note-ic">${ICON.users}</div><div class="note-tx">
+    <b>تنبيه هام لأولياء الأمور</b>
+    <p>لديكم أكثر من ابن في المدرسة؟ يكفي إدخال <u>الرقم الوطني لأحد الأبناء</u> وتاريخ ميلاده، ثم من داخل الصفحة اضغطوا <em>«إضافة طالب آخر»</em> لإضافة بقية أبنائكم وتحديث بياناتهم جميعاً بإدخال واحد، دون الحاجة إلى تسجيل دخول جديد.</p>
+    <div class="note-steps"><span><i>1</i>أدخلوا رقم أحد الأبناء</span><span><i>2</i>اضغطوا «إضافة طالب آخر»</span><span><i>3</i>احفظوا مرة واحدة</span></div></div></div></div>
   <div class="banner"><div class="b"><div class="ic">${closed?ICON.lock:ICON.spark}</div><div><b>${closed?"باب تحديث البيانات مغلق حالياً":esc(SET.announcement||"حدّث بيانات التواصل لابنك مرة واحدة فقط")}</b><span>هذه البيانات تُجمع لأغراض العملية التعليمية والتواصل الرسمي بين المدرسة وولي الأمر فقط</span></div></div></div>
   <section class="hero2"><div class="txt"><span class="eyebrow">مديرية التربية والتعليم للواء وادي السير</span>
     <h1>بوابة <em>تحديث بيانات</em> الطلبة</h1>
