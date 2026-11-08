@@ -158,3 +158,19 @@ td .s,.s{font-size:.78rem;color:var(--mut)}
 .empty{text-align:center;color:var(--mut);padding:40px 10px}
 footer{text-align:center;color:var(--mut);font-size:.8rem;padding:26px 10px 34px}
 .official{display:none}
+
+/* خيارات الهاتف الملونة */
+.chk.wa{background:#eaf7ee;border-color:#b7dfc3}
+.chk.wa:has(input:checked){background:#d3f0dc;border-color:#2e9e57;box-shadow:0 0 0 3px rgba(46,158,87,.15)}
+.chk.wa input{accent-color:#2e9e57}.chk.wa b{color:#1f7a42}
+.chk.aj{background:#fbf3dc;border-color:#ebd69c}
+.chk.aj:has(input:checked){background:#f6e4b0;border-color:#a97c27;box-shadow:0 0 0 3px rgba(169,124,39,.18)}
+.chk.aj input{accent-color:#a97c27}.chk.aj b{color:#8a6217}
+.ro .inp.edit{background:#fffefa;color:var(--ink);opacity:1;cursor:text;border-style:solid}
+
+.credits{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+.credits>div{display:flex;flex-direction:column;gap:1px;background:rgba(255,253,246,.8);border:1px solid var(--line);border-radius:14px;padding:10px 16px;min-width:170px}
+.credits span{font-size:.74rem;color:var(--gold);font-weight:700}
+.credits b{font-size:.98rem}
+.credits a{color:var(--pri);text-decoration:none;font-weight:500;font-size:.9rem;text-align:right}
+.credits a:hover{text-decoration:underline}

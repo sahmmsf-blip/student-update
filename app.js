@@ -64,7 +64,8 @@ async function go(){
   <section class="hero2"><div class="txt"><span class="eyebrow">مديرية التربية والتعليم للواء وادي السير</span>
     <h1>بوابة <em>تحديث بيانات</em> الطلبة</h1>
     <p class="lead">حدّث بيانات التواصل الخاصة بك وبابنك أو أبنائك بإدخال واحد، لتصل إليك رسائل المدرسة وتتابع الطالب بشكل صحيح.</p>
-    <div class="chips"><span>${ICON.bolt}دقيقتان فقط</span><span>${ICON.shield}بيانات محمية</span><span>${ICON.book}للأغراض التعليمية</span></div></div>
+    <div class="chips"><span>${ICON.bolt}دقيقتان فقط</span><span>${ICON.shield}بيانات محمية</span><span>${ICON.book}للأغراض التعليمية</span></div>
+    <div class="credits"><div><span>المطوّر</span><b>أ. سهم العجارمة</b></div><div><span>المرشد التربوي</span><b>أ. إيهاب أبو دية</b><a href="tel:0786199363" dir="ltr">0786199363</a></div></div></div>
    <div class="lcard" id="lc">${loginForm()}</div></section>
   <section class="wrap" id="how" style="max-width:1240px;padding:10px 18px 0"><div class="card"><h2>كيف تعمل؟</h2><div class="sub">ثلاث خطوات بسيطة</div>
     <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
@@ -78,7 +79,7 @@ async function go(){
 let LG={nid:"",dob:""};
 function loginForm(msg){
   return `<div class="lhead"><div class="ic">${ICON.id}</div><div><h2>تسجيل الدخول</h2><small>بالرقم الوطني للطالب وتاريخ ميلاده</small></div></div>
-  <div class="field"><label for="nid">الرقم الوطني للطالب</label><div class="rel"><input class="inp" id="nid" inputmode="numeric" autocomplete="off" dir="ltr" maxlength="10" placeholder="••••••••••"><span class="cnt" id="cn">0/10</span></div><div class="errt" id="e1"></div></div>
+  <div class="field"><label for="nid">الرقم الوطني للطالب</label><input class="inp" id="nid" inputmode="numeric" autocomplete="off" dir="ltr" maxlength="10" placeholder="10 أرقام"><div class="hint"><span id="cn">0/10</span></div><div class="errt" id="e1"></div></div>
   <div class="field"><label>تاريخ ميلاد الطالب</label>${dateSel("dobS")}<div class="errt" id="e2"></div></div>
   <div id="lm">${msg||""}</div>
   <div class="actions" style="margin-top:18px"><button class="btn block" id="lg">دخول ${ICON.arrow}</button></div>
@@ -126,7 +127,7 @@ function roField(l,v){ return `<div class="field"><label>${l}</label><input clas
 function kidCard(k,i){
   const st=k.status==="submitted"?'<span class="pill p-ok">تم التحديث مسبقاً</span>':k.status==="reopened"?'<span class="pill p-re">أُعيد فتحه للتعديل</span>':'<span class="pill p-info">بيانات الطالب</span>';
   return `<div class="card ro"><div class="ro-t"><div class="av" style="width:36px;height:36px;border-radius:10px">${esc(initials(k.name))}</div>${esc(k.name)}${st}<button class="btn sm sec" data-rm="${i}" title="إزالة الطالب" aria-label="إزالة">✕</button></div>
-   <div class="grid2">${roField("الرقم الوطني",k.nid)}${roField("تاريخ الميلاد",k.dob)}${roField("مكان الولادة",k.birth_place)}${roField("الجنسية",k.nationality)}${roField("الصف",k.grade)}${roField("الشعبة",k.section)}</div></div>`;
+   <div class="grid2">${roField("الرقم الوطني",k.nid)}${roField("تاريخ الميلاد",k.dob)}<div class="field"><label>مكان الولادة <b style="color:var(--bad)">*</b></label><input class="inp edit" data-bp="${i}" value="${esc(k.birth_place||"")}" placeholder="مثال: عمّان، إربد، الزرقاء…" maxlength="60" ${k.status==="submitted"?"disabled":""}><div class="errt" id="ebp${i}"></div></div>${roField("الجنسية",k.nationality)}${roField("الصف",k.grade)}${roField("الشعبة",k.section)}</div></div>`;
 }
 function lookupCard(){
   return `<div class="card"><h2>${kids.length?"إضافة طالب آخر":"أدخل بيانات الطالب"}</h2>
@@ -148,11 +149,13 @@ function parentPage(msg){
    ${!el.length&&kids.length&&!showLookup?`<div class="card"><div class="alert ok">جميع الطلبة المضافين تم تحديث بياناتهم مسبقاً. للتعديل تواصل مع المرشد التربوي.</div><div class="actions"><button class="btn" id="addk">＋ إضافة طالب آخر</button></div></div>`:""}
    </div>`;
   $$("[data-rm]").forEach(b=>b.onclick=()=>{kids.splice(+b.dataset.rm,1);parentPage()});
+  $$("[data-bp]").forEach(inp=>inp.oninput=()=>{kids[+inp.dataset.bp].birth_place=inp.value; const e=$("#ebp"+inp.dataset.bp); if(e) e.textContent=""});
   if(showLookup){ $("#nid").oninput=e=>{e.target.value=digits(e.target.value,10)}; $("#add").onclick=addKid; $("#nid").onkeydown=e=>{if(e.key==="Enter")addKid()};
     if($("#cancelAdd")) $("#cancelAdd").onclick=()=>{adding=false;parentPage()}; }
   if($("#fm")){ wireForm(app); }
   if($("#addk")) $("#addk").onclick=()=>{ if($("#fm")) draft=readForm(app); adding=true; parentPage(); setTimeout(()=>$("#nid")&&$("#nid").scrollIntoView({behavior:"smooth",block:"center"}),50); };
-  if($("#sv")) $("#sv").onclick=()=>{ const p=readForm(app); draft=p; if(!validateForm(app,p)) return $("#m").innerHTML='<div class="alert err">يرجى تصحيح الحقول المظلّلة بالأحمر</div>'; confirmSave(p); };
+  if($("#sv")) $("#sv").onclick=()=>{ const p=readForm(app); draft=p; let okBp=true; kids.forEach((k,i)=>{ if(k.status!=="submitted"&&String(k.birth_place||"").trim().length<2){ okBp=false; const e=$("#ebp"+i); if(e) e.textContent="أدخل مكان ولادة الطالب"; } });
+    if(!validateForm(app,p)||!okBp) return $("#m").innerHTML='<div class="alert err">يرجى تصحيح الحقول المظلّلة بالأحمر، ومكان ولادة كل طالب</div>'; confirmSave(p); };
 }
 async function addKid(){
   const nid=digits($("#nid").value,10), dob=readDate("dobK"); let ok=true;
@@ -176,29 +179,30 @@ function relField(id,label,v){
    <option value="">اختر…</option>${RELS.map(r=>`<option ${(known&&r===val)||(!known&&val&&r==="أخرى")?"selected":""}>${r}</option>`).join("")}</select>
    <input class="inp ${(!known&&val)?"":"hide"}" id="${id}_o" placeholder="اكتب صلة القرابة" value="${(!known&&val)?esc(val):""}" style="margin-top:8px"><div class="errt" id="e_${id}"></div></div>`;
 }
-function phoneField(id,label,v,ag){
+function phoneField(id,label,v,ag,wa){
   return `<div class="field"><label>${label}</label><input class="inp" id="${id}" inputmode="numeric" dir="ltr" maxlength="10" placeholder="07XXXXXXXX" value="${esc(v||"")}">
    <div class="hint">رقم أردني يبدأ بـ 07 ويتكون من 10 أرقام</div><div class="errt" id="e_${id}"></div>
-   <label class="chk"><input type="checkbox" id="${id}_ag" ${ag?"checked":""}><span>استخدام هذا الرقم لاستقبال رسالة كود دخول الطالب على منصة أجيال</span></label></div>`;
+   <label class="chk wa"><input type="checkbox" id="${id}_wa" ${wa?"checked":""}><span><b>واتساب</b> — استخدام هذا الرقم لمجموعات الواتساب</span></label>
+   <label class="chk aj"><input type="checkbox" id="${id}_ag" ${ag?"checked":""}><span><b>أجيال OTP</b> — استخدام هذا الرقم لاستقبال رسائل كود الدخول (OTP) على منصة أجيال</span></label></div>`;
 }
 function nameField(id,label,v){ return `<div class="field"><label>${label}</label><input class="inp" id="${id}" value="${esc(v||"")}" placeholder="الاسم الثلاثي على الأقل"><div class="errt" id="e_${id}"></div></div>`; }
 function formBody(d){ d=d||{}; return `
- <div class="sec-t" style="margin-top:6px"><i>👤</i>ولي الأمر</div>
- ${nameField("gn","اسم ولي الأمر",d.guardian_name)}
+ <div class="sec-t" style="margin-top:6px"><i>👤</i>ولي الأمر الأول</div>
+ ${nameField("gn","اسم ولي الأمر الأول",d.guardian_name)}
  <div class="grid2">${relField("gr","صلة القرابة",d.guardian_relation)}
   <div class="field"><label>مهنة ولي الأمر</label><input class="inp" id="go" value="${esc(d.guardian_occupation||"")}" placeholder="موظف، معلم، أعمال حرة، متقاعد…"><div class="errt" id="e_go"></div></div></div>
- ${phoneField("gp","رقم هاتف ولي الأمر",d.guardian_phone,d.guardian_phone_agyal)}
- <div class="sec-t"><i>🏫</i>شخص آخر لمتابعة الطالب في المدرسة</div>
- ${nameField("sn","الاسم",d.school_contact_name)}
- <div class="grid2">${relField("sr","صلة القرابة",d.school_contact_relation)}${phoneField("sp","رقم الهاتف",d.school_contact_phone,d.school_contact_agyal)}</div>`; }
+ ${phoneField("gp","رقم هاتف ولي الأمر الأول",d.guardian_phone,d.guardian_phone_agyal,d.guardian_phone_whatsapp)}
+ <div class="sec-t"><i>👥</i>ولي الأمر الثاني <span class="s" style="font-weight:400">(في حال غياب ولي الأمر الأول — لمتابعة الطالب في المدرسة)</span></div>
+ ${nameField("sn","اسم ولي الأمر الثاني",d.school_contact_name)}
+ <div class="grid2">${relField("sr","صلة القرابة",d.school_contact_relation)}${phoneField("sp","رقم هاتف ولي الأمر الثاني",d.school_contact_phone,d.school_contact_agyal,d.school_contact_whatsapp)}</div>`; }
 function wireForm(root){
   ["gp","sp"].forEach(id=>{const e=root.querySelector("#"+id); e.oninput=()=>{e.value=digits(e.value,10)}});
   ["gr","sr"].forEach(id=>{const s=root.querySelector("#"+id); s.onchange=()=>root.querySelector("#"+id+"_o").classList.toggle("hide",s.value!=="أخرى")});
 }
 function readForm(root){
   const rel=id=>{const v=root.querySelector("#"+id).value; return v==="أخرى"?root.querySelector("#"+id+"_o").value.trim():v;};
-  return {guardian_name:root.querySelector("#gn").value.trim(),guardian_relation:rel("gr"),guardian_occupation:root.querySelector("#go").value.trim(),guardian_phone:digits(root.querySelector("#gp").value,10),guardian_phone_agyal:root.querySelector("#gp_ag").checked,
-    school_contact_name:root.querySelector("#sn").value.trim(),school_contact_relation:rel("sr"),school_contact_phone:digits(root.querySelector("#sp").value,10),school_contact_agyal:root.querySelector("#sp_ag").checked};
+  return {guardian_name:root.querySelector("#gn").value.trim(),guardian_relation:rel("gr"),guardian_occupation:root.querySelector("#go").value.trim(),guardian_phone:digits(root.querySelector("#gp").value,10),guardian_phone_agyal:root.querySelector("#gp_ag").checked,guardian_phone_whatsapp:root.querySelector("#gp_wa").checked,
+    school_contact_name:root.querySelector("#sn").value.trim(),school_contact_relation:rel("sr"),school_contact_phone:digits(root.querySelector("#sp").value,10),school_contact_agyal:root.querySelector("#sp_ag").checked,school_contact_whatsapp:root.querySelector("#sp_wa").checked};
 }
 function validateForm(root,p){
   const set=(id,m)=>{const e=root.querySelector("#e_"+id); if(e)e.textContent=m||""; const i=root.querySelector("#"+id); if(i)i.classList.toggle("bad",!!m)};
@@ -225,9 +229,9 @@ function confirmSave(p){
   w.querySelector("#pn").onclick=()=>w.remove();
   w.querySelector("#py").onclick=async()=>{
     const b=w.querySelector("#py"); b.disabled=true; b.textContent="جارٍ الحفظ…"; w.querySelector("#pm").innerHTML="";
-    const body={...p,consent:true}, fails=[];
+    const fails=[];
     for(const k of el){
-      try{ const r=await rpc("parent_submit",{p_nid:k.nid,p_dob:k.dob,p:body}); if(r.error) fails.push(`${k.name}: ${ERR[r.error]||r.error}`); else { k.status="submitted"; k.data={...body,status:"submitted"}; } }
+      try{ const body={...p,consent:true,birth_place:String(k.birth_place||"").trim()}; const r=await rpc("parent_submit",{p_nid:k.nid,p_dob:k.dob,p:body}); if(r.error) fails.push(`${k.name}: ${ERR[r.error]||r.error}`); else { k.status="submitted"; k.data={...body,status:"submitted"}; } }
       catch(e){ fails.push(`${k.name}: ${e.message}`); } }
     if(fails.length){ b.disabled=false; b.textContent="✔ تأكيد الحفظ"; w.querySelector("#pm").innerHTML=`<div class="alert err">${fails.map(esc).join("<br>")}</div>`; }
     else { w.remove(); parentDone(); }
@@ -243,7 +247,7 @@ function parentDone(){
 }
 
 /* =================== الإدارة (الدخول موحّد من النموذج الرئيسي) =================== */
-let ALL=[], TAB="overview", F={q:"",status:"",grade:"",section:"",nat:"",ag:""}, LIM=100;
+let ALL=[], TAB="overview", F={q:"",status:"",grade:"",section:"",nat:"",ag:"",wa:""}, LIM=100;
 const isAdmin=()=>staff&&staff.role==="admin";
 const stOf=x=>!x.g?"no":(x.g.status==="reopened"?"re":"ok");
 const STL={ok:"محدَّث",no:"لم يحدّث",re:"أُعيد فتحه"};
@@ -267,7 +271,7 @@ function hbars(rows){ return rows.map(r=>{const p=r.t?Math.round(r.d*100/r.t):0;
 
 function overview(){
   const tot=ALL.length, done=ALL.filter(x=>stOf(x)==="ok").length, re=ALL.filter(x=>stOf(x)==="re").length, no=tot-done-re;
-  const pct=tot?Math.round(done*100/tot):0, ag=ALL.filter(x=>x.g&&(x.g.guardian_phone_agyal||x.g.school_contact_agyal)).length;
+  const pct=tot?Math.round(done*100/tot):0, ag=ALL.filter(x=>x.g&&(x.g.guardian_phone_agyal||x.g.school_contact_agyal)).length, wa=ALL.filter(x=>x.g&&(x.g.guardian_phone_whatsapp||x.g.school_contact_whatsapp)).length;
   const C=2*Math.PI*52, dd=C*done/(tot||1), rr=C*re/(tot||1);
   const days=[]; for(let i=13;i>=0;i--){const d=new Date(Date.now()-i*864e5).toISOString().slice(0,10); days.push({d,n:0})}
   ALL.forEach(x=>{ if(x.g&&x.g.status==="submitted"){const d=(x.g.updated_at||"").slice(0,10); const o=days.find(a=>a.d===d); if(o)o.n++;} });
@@ -276,7 +280,7 @@ function overview(){
   <div class="kpis"><div class="kpi"><div class="l">إجمالي الطلبة</div><div class="v">${tot}</div></div>
    <div class="kpi"><div class="l">تم التحديث</div><div class="v" style="color:var(--ok)">${done}</div><div class="d">${pct}% من الطلبة</div></div>
    <div class="kpi"><div class="l">لم يحدّثوا بعد</div><div class="v" style="color:var(--bad)">${no}</div></div>
-   <div class="kpi"><div class="l">طلبوا كود أجيال برسالة</div><div class="v">${ag}</div>${re?`<div class="d">${re} أُعيد فتحها</div>`:""}</div></div>
+   <div class="kpi"><div class="l">أرقام OTP أجيال</div><div class="v">${ag}</div><div class="d">${wa} طالباً أرقامهم لمجموعات الواتساب${re?` · ${re} أُعيد فتحها`:""}</div></div></div>
   <div class="cols"><div class="card"><h2>نسبة الإنجاز</h2><div class="donut">
     <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--surface2)" stroke-width="14"/>
      <circle cx="60" cy="60" r="52" fill="none" stroke="var(--ok)" stroke-width="14" stroke-dasharray="${dd} ${C}" transform="rotate(-90 60 60)" stroke-linecap="round"/>
@@ -294,6 +298,7 @@ function filtered(){
   const q=toEn(F.q).toLowerCase();
   return ALL.filter(x=>(!F.status||stOf(x)===F.status)&&(!F.grade||x.grade===F.grade)&&(!F.section||x.section===F.section)&&(!F.nat||x.nationality===F.nat)
     &&(!F.ag||(F.ag==="y"?(x.g&&(x.g.guardian_phone_agyal||x.g.school_contact_agyal)):!(x.g&&(x.g.guardian_phone_agyal||x.g.school_contact_agyal))))
+    &&(!F.wa||((F.wa==="y")===!!(x.g&&(x.g.guardian_phone_whatsapp||x.g.school_contact_whatsapp))))
     &&(!q||x.full_name.toLowerCase().includes(q)||x.national_id.includes(q)||(x.g&&(x.g.guardian_phone.includes(q)||x.g.school_contact_phone.includes(q)||x.g.guardian_name.toLowerCase().includes(q)))));
 }
 const opts=(arr,cur,ph)=>`<option value="">${ph}</option>`+arr.map(v=>`<option ${v===cur?"selected":""}>${esc(v)}</option>`).join("");
@@ -304,14 +309,15 @@ function students(){
    <select class="inp" id="fg">${opts(uniq("grade"),F.grade,"كل الصفوف")}</select>
    <select class="inp" id="fsec">${opts(uniq("section"),F.section,"كل الشعب")}</select>
    <select class="inp" id="fn">${opts(uniq("nationality"),F.nat,"كل الجنسيات")}</select>
-   <select class="inp" id="fa"><option value="">أجيال: الكل</option><option value="y" ${F.ag==="y"?"selected":""}>طلب رسالة أجيال</option><option value="n" ${F.ag==="n"?"selected":""}>لم يطلب</option></select></div>
+   <select class="inp" id="fa"><option value="">أجيال OTP: الكل</option><option value="y" ${F.ag==="y"?"selected":""}>OTP أجيال</option><option value="n" ${F.ag==="n"?"selected":""}>لم يطلب</option></select>
+   <select class="inp" id="fw"><option value="">واتساب: الكل</option><option value="y" ${F.wa==="y"?"selected":""}>للواتساب</option><option value="n" ${F.wa==="n"?"selected":""}>ليس للواتساب</option></select></div>
   <div class="bar-tools"><span class="pill p-info" id="cnt"></span><div class="sp" style="flex:1"></div>
    <button class="btn sm" id="ex">⬇ تصدير المحدَّثة</button><button class="btn sm sec" id="exf">⬇ تصدير النتائج الحالية</button>
    ${isAdmin()?'<button class="btn sm sec" id="imp">⬆ استيراد Excel</button><button class="btn sm sec" id="tpl">قالب الاستيراد</button><button class="btn sm" id="addst">+ طالب</button>':""}</div>
   <div id="m"></div><div class="tw"><table><thead><tr><th>الطالب</th><th>الصف</th><th>الجنسية</th><th>الحالة</th><th>ولي الأمر</th><th>شخص المتابعة</th><th>آخر تحديث</th><th></th></tr></thead><tbody id="tb"></tbody></table></div><div id="more"></div>`;
   const rf=()=>{LIM=100;rows()};
   $("#fq").oninput=e=>{F.q=e.target.value;rf()};
-  [["fs","status"],["fg","grade"],["fsec","section"],["fn","nat"],["fa","ag"]].forEach(([id,k])=>$("#"+id).onchange=e=>{F[k]=e.target.value;rf()});
+  [["fs","status"],["fg","grade"],["fsec","section"],["fn","nat"],["fa","ag"],["fw","wa"]].forEach(([id,k])=>$("#"+id).onchange=e=>{F[k]=e.target.value;rf()});
   $("#ex").onclick=()=>exportX(ALL.filter(x=>x.g),"البيانات_المحدثة"); $("#exf").onclick=()=>exportX(filtered(),"نتائج_الفلترة");
   if(isAdmin()){ $("#imp").onclick=importX; $("#tpl").onclick=template; $("#addst").onclick=()=>studentModal(); }
   rows();
@@ -322,8 +328,8 @@ function rows(){
     return `<tr><td><b>${esc(x.full_name)}</b><div class="s" dir="ltr" style="text-align:right">${esc(x.national_id)}</div></td>
     <td>${esc(x.grade||"—")}<div class="s">${x.section?"شعبة "+esc(x.section):""}</div></td><td>${esc(x.nationality||"—")}<div class="s">${x.birth_place?"مواليد "+esc(x.birth_place):""}</div></td>
     <td><span class="pill ${{ok:"p-ok",no:"p-no",re:"p-re"}[s]}">${STL[s]}</span></td>
-    <td>${d?`${esc(d.guardian_name)}<div class="s">${esc(d.guardian_relation)}${d.guardian_occupation?" · "+esc(d.guardian_occupation):""} · <span dir="ltr">${esc(d.guardian_phone)}</span>${d.guardian_phone_agyal?" 📩":""}</div>`:"—"}</td>
-    <td>${d?`${esc(d.school_contact_name)}<div class="s">${esc(d.school_contact_relation)} · <span dir="ltr">${esc(d.school_contact_phone)}</span>${d.school_contact_agyal?" 📩":""}</div>`:"—"}</td>
+    <td>${d?`${esc(d.guardian_name)}<div class="s">${esc(d.guardian_relation)}${d.guardian_occupation?" · "+esc(d.guardian_occupation):""} · <span dir="ltr">${esc(d.guardian_phone)}</span>${d.guardian_phone_whatsapp?" 💬":""}${d.guardian_phone_agyal?" 📩":""}</div>`:"—"}</td>
+    <td>${d?`${esc(d.school_contact_name)}<div class="s">${esc(d.school_contact_relation)} · <span dir="ltr">${esc(d.school_contact_phone)}</span>${d.school_contact_whatsapp?" 💬":""}${d.school_contact_agyal?" 📩":""}</div>`:"—"}</td>
     <td class="s">${d?esc((d.updated_at||"").slice(0,16).replace("T"," "))+"<br>"+(d.updated_by==="parent"?"ولي الأمر":esc(d.updated_by)):"—"}</td>
     <td><div class="acts"><button class="btn sm sec" data-e="${esc(x.national_id)}">بيانات التواصل</button>
      ${d&&d.status==="submitted"?`<button class="btn sm warn" data-r="${esc(x.national_id)}">إعادة فتح</button>`:""}
@@ -340,11 +346,11 @@ function confirmBox(text,label,fn){ const w=modal(`<h2>تأكيد</h2><div class
   w.querySelector("#n").onclick=()=>w.remove(); w.querySelector("#y").onclick=async()=>{try{await fn();w.remove()}catch(e){toast(e.message);w.remove()}}; }
 function contactModal(nid){
   const x=ALL.find(a=>a.national_id===nid);
-  const w=modal(`<h2>${esc(x.full_name)}</h2><div class="sub" dir="ltr" style="text-align:right">${esc(nid)}</div>${formBody(x.g)}<div id="mm"></div>
+  const w=modal(`<h2>${esc(x.full_name)}</h2><div class="sub" dir="ltr" style="text-align:right">${esc(nid)}</div><div class="field"><label>مكان الولادة</label><input class="inp" id="bpm" value="${esc(x.birth_place||"")}" maxlength="60"></div>${formBody(x.g)}<div id="mm"></div>
    <div class="actions"><button class="btn" id="s2">حفظ</button><button class="btn sec" id="c2">إلغاء</button>${x.g&&isAdmin()?'<button class="btn dng" id="cl" style="margin-inline-start:auto">مسح البيانات</button>':""}</div>`);
   wireForm(w); w.querySelector("#c2").onclick=()=>w.remove();
   if(w.querySelector("#cl")) w.querySelector("#cl").onclick=()=>confirmBox("سيتم حذف بيانات التواصل لهذا الطالب نهائياً.","حذف",async()=>{await rpc("staff_clear",{p_token:staff.token,p_nid:nid});w.remove();toast("تم المسح");await reload()});
-  w.querySelector("#s2").onclick=async()=>{ const p=readForm(w); if(!validateForm(w,p)) return;
+  w.querySelector("#s2").onclick=async()=>{ const p=readForm(w); p.birth_place=w.querySelector("#bpm").value.trim(); if(!validateForm(w,p)) return;
     try{ const r=await rpc("staff_save",{p_token:staff.token,p_nid:nid,p}); if(r.error) w.querySelector("#mm").innerHTML=`<div class="alert err">${ERR[r.error]||r.error}</div>`; else { w.remove(); toast("تم الحفظ"); await reload(); } }
     catch(e){ w.querySelector("#mm").innerHTML=`<div class="alert err">${esc(e.message)}</div>`; } };
 }
@@ -382,7 +388,7 @@ async function exportX(list,name){
   list.forEach(x=>{const k=(x.grade||"بدون صف")+"|"+(x.section||""); (groups.get(k)||groups.set(k,[]).get(k)).push(x)});
   const keys=[...groups.keys()].sort((a,b)=>{const [ga,sa]=a.split("|"),[gb,sb]=b.split("|"); return gi(ga)-gi(gb)||ga.localeCompare(gb,"ar")||sa.localeCompare(sb,"ar")});
   const used=new Set(), uniqueName=n=>{n=n.replace(/[\[\]:*?\/\\]/g,"").slice(0,31); let r=n,i=2; while(used.has(r)) r=n.slice(0,28)+" "+(i++); used.add(r); return r};
-  const cols=[["م",5],["الرقم الوطني",15],["اسم الطالب",32],["تاريخ الميلاد",13],["مكان الولادة",14],["الجنسية",11],["الحالة",12],["اسم ولي الأمر",26],["صلة القرابة",12],["مهنة ولي الأمر",16],["هاتف ولي الأمر",14],["أجيال (ولي الأمر)",11],["شخص المتابعة",26],["صلة القرابة (المتابعة)",13],["هاتف المتابعة",14],["أجيال (المتابعة)",11],["آخر تحديث",17]];
+  const cols=[["م",5],["الرقم الوطني",15],["اسم الطالب",32],["تاريخ الميلاد",13],["مكان الولادة",14],["الجنسية",11],["الحالة",12],["ولي الأمر الأول",26],["صلة القرابة",12],["مهنة ولي الأمر",16],["هاتف ولي الأمر الأول",14],["واتساب (الأول)",11],["OTP أجيال (الأول)",12],["ولي الأمر الثاني",26],["صلة القرابة (الثاني)",13],["هاتف ولي الأمر الثاني",14],["واتساب (الثاني)",11],["OTP أجيال (الثاني)",12],["آخر تحديث",17]];
   const L=cols.length;
   const colL=n=>{let s="";while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s};
   const stats=[];
@@ -404,9 +410,9 @@ async function exportX(list,name){
     h.height=34;
     rows.sort((a,b)=>a.full_name.localeCompare(b.full_name,"ar")).forEach((x,i)=>{
       const d=x.g, S=stOf(x), yn=v=>d?(v?"نعم":"لا"):"";
-      const r=ws.addRow([i+1,x.national_id,x.full_name,x.birth_date,x.birth_place||"",x.nationality||"",STL[S],d?.guardian_name||"",d?.guardian_relation||"",d?.guardian_occupation||"",d?.guardian_phone||"",yn(d?.guardian_phone_agyal),d?.school_contact_name||"",d?.school_contact_relation||"",d?.school_contact_phone||"",yn(d?.school_contact_agyal),d?.updated_at?d.updated_at.slice(0,16).replace("T"," "):""]);
+      const r=ws.addRow([i+1,x.national_id,x.full_name,x.birth_date,x.birth_place||"",x.nationality||"",STL[S],d?.guardian_name||"",d?.guardian_relation||"",d?.guardian_occupation||"",d?.guardian_phone||"",yn(d?.guardian_phone_whatsapp),yn(d?.guardian_phone_agyal),d?.school_contact_name||"",d?.school_contact_relation||"",d?.school_contact_phone||"",yn(d?.school_contact_whatsapp),yn(d?.school_contact_agyal),d?.updated_at?d.updated_at.slice(0,16).replace("T"," "):""]);
       r.height=22; const zebra=i%2?"FFF6F2E6":"FFFFFFFF";
-      r.eachCell({includeEmpty:true},(c,n)=>{c.font={name:FONT,size:11}; c.border=BD; c.fill={type:"pattern",pattern:"solid",fgColor:{argb:zebra}}; c.alignment={vertical:"middle",horizontal:[1,2,4,7,9,11,12,14,15,16,17].includes(n)?"center":"right"}; if([2,11,15].includes(n)) c.numFmt="@"});
+      r.eachCell({includeEmpty:true},(c,n)=>{c.font={name:FONT,size:11}; c.border=BD; c.fill={type:"pattern",pattern:"solid",fgColor:{argb:zebra}}; c.alignment={vertical:"middle",horizontal:[1,2,4,7,9,11,12,13,15,16,17,18,19].includes(n)?"center":"right"}; if([2,11,16].includes(n)) c.numFmt="@"});
       const sc=r.getCell(7), col={ok:["FFDCF5E7","FF0B7A43"],no:["FFFDE2E6","FFC0283F"],re:["FFFFEFD0","FFB45F06"]}[S];
       sc.fill={type:"pattern",pattern:"solid",fgColor:{argb:col[0]}}; sc.font={name:FONT,size:11,bold:true,color:{argb:col[1]}};
     });
