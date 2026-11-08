@@ -61,14 +61,15 @@ async function go(){
   chrome("بوابة أولياء الأمور");
   const closed=!SET.form_open||(SET.deadline&&SET.deadline<new Date().toISOString().slice(0,10));
   app.innerHTML=`
+  <header class="ptitle"><span class="eyebrow">مديرية التربية والتعليم للواء وادي السير</span>
+    <h1>بوابة <em>تحديث بيانات</em> الطلبة</h1>
+    <p class="lead">حدّث بيانات التواصل الخاصة بك وبابنك أو أبنائك بإدخال واحد، لتصل إليك رسائل المدرسة وتتابع الطالب بشكل صحيح.</p></header>
   <div class="banner"><div class="note"><div class="note-ic">${ICON.users}</div><div class="note-tx">
     <b>تنبيه هام لأولياء الأمور</b>
     <p>لديكم أكثر من ابن في المدرسة؟ يكفي إدخال <u>الرقم الوطني لأحد الأبناء</u> وتاريخ ميلاده، ثم من داخل الصفحة اضغطوا <em>«إضافة طالب آخر»</em> لإضافة بقية أبنائكم وتحديث بياناتهم جميعاً بإدخال واحد، دون الحاجة إلى تسجيل دخول جديد.</p>
     <div class="note-steps"><span><i>1</i>أدخلوا رقم أحد الأبناء</span><span><i>2</i>اضغطوا «إضافة طالب آخر»</span><span><i>3</i>احفظوا مرة واحدة</span></div></div></div></div>
   <div class="banner"><div class="b"><div class="ic">${closed?ICON.lock:ICON.spark}</div><div><b>${closed?"باب تحديث البيانات مغلق حالياً":esc(SET.announcement||"حدّث بيانات التواصل لابنك مرة واحدة فقط")}</b><span>هذه البيانات تُجمع لأغراض العملية التعليمية والتواصل الرسمي بين المدرسة وولي الأمر فقط</span></div></div></div>
-  <section class="hero2"><div class="txt"><span class="eyebrow">مديرية التربية والتعليم للواء وادي السير</span>
-    <h1>بوابة <em>تحديث بيانات</em> الطلبة</h1>
-    <p class="lead">حدّث بيانات التواصل الخاصة بك وبابنك أو أبنائك بإدخال واحد، لتصل إليك رسائل المدرسة وتتابع الطالب بشكل صحيح.</p>
+  <section class="hero2"><div class="txt">
     <div class="chips"><span>${ICON.bolt}دقيقتان فقط</span><span>${ICON.shield}بيانات محمية</span><span>${ICON.book}للأغراض التعليمية</span></div>
     <div class="credits"><div><span>المطوّر</span><b>أ. سهم العجارمة</b></div><div><span>المرشد التربوي</span><b>أ. إيهاب أبو دية</b><a href="tel:0786199363" dir="ltr">0786199363</a></div></div></div>
    <div class="lcard" id="lc">${loginForm()}</div></section>
