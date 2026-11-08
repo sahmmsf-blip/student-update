@@ -1,10 +1,12 @@
 # تحديث بيانات الطلبة
 
-الملفات: `index.html` + مجلد `img` (الشعارات). قاعدة البيانات على Supabase.
+الملفات المطلوب رفعها (جميعها):
+- index.html
+- app.js
+- style.css
+- img/ (moe.jpg, school.jpg)
+- fonts/ (ملفات الخطوط woff2)
+- lib/ (exceljs.min.js, xlsx.full.min.js)
 
-## النشر على GitHub Pages
-1. أنشئ مستودعاً جديداً (مثلاً `student-update`) وارفع `index.html` ومجلد `img` وهذا الملف.
-2. Settings ← Pages ← Source: Deploy from a branch ← Branch: main / root ← Save.
-3. الرابط: `https://USERNAME.github.io/student-update/`
-
-لا ترفع أي ملف فيه أسماء الطلبة (مثل students_import.xlsx).
+النشر: GitHub ← Settings ← Pages ← Deploy from a branch ← main / root.
+لا ترفع أي ملف فيه أسماء الطلبة.
