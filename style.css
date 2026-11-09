@@ -201,3 +201,58 @@ footer{text-align:center;color:var(--mut);font-size:.8rem;padding:26px 10px 34px
 .hero2{padding-top:26px}
 .hero2 .txt{align-self:start}
 @media(max-width:900px){.ptitle{padding:22px 16px 0}.ptitle h1{font-size:2.05rem}.ptitle .lead{font-size:1rem}}
+
+/* ===== إضافات: شارة، تنبيهات، قوائم التصدير، QR، الإيصال، الطباعة ===== */
+.nav{position:relative}
+.bdg{background:var(--bad);color:#fff;border-radius:99px;font-size:.72rem;min-width:20px;height:20px;display:inline-grid;place-items:center;padding:0 6px;margin-inline-start:auto;font-weight:700}
+@media(max-width:860px){.side{overflow-x:auto}.nav{flex:0 0 auto;min-width:74px;white-space:nowrap}.bdg{position:absolute;top:2px;inset-inline-end:8px;margin:0}}
+.alrow{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.optb{display:block;width:100%;text-align:right;background:#fffefa;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;cursor:pointer}
+.optb:hover{border-color:var(--pri);background:var(--pri-soft)}
+.optb b{display:block}.optb span{color:var(--mut);font-size:.85rem}
+.qrbox{max-width:260px;margin:10px auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px}
+.qrbox svg{width:100%;height:auto;display:block}
+table.rq th{width:26%;background:var(--surface2)}
+table.rq tr.chg td{background:#fbf0d2}
+table.rq td,table.rq th{font-size:.9rem}
+.receipt{max-width:760px;margin-inline:auto}
+.rc-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:2px solid var(--line);padding-bottom:12px}
+.rc-head img{width:70px;height:70px;object-fit:contain}
+.rc-t{text-align:center;line-height:1.7;font-size:.9rem}
+table.rc{width:100%;min-width:0;border-collapse:collapse}
+table.rc th,table.rc td{border:1px solid var(--line);padding:7px 9px;text-align:right;font-size:.88rem}
+table.rc thead th{background:var(--surface2);position:static}
+table.rc.kv th{width:28%;background:var(--surface2)}
+table.rc th.sec{background:var(--pri-soft);color:var(--pri2)}
+#flyer{display:none}
+@media print{
+  body{background:#fff!important}
+  body.pr-receipt *,body.pr-flyer *{visibility:hidden}
+  body.pr-receipt #receipt,body.pr-receipt #receipt *{visibility:visible}
+  body.pr-receipt #receipt{position:absolute;inset:0 0 auto 0;box-shadow:none;border:0;margin:0}
+  body.pr-flyer #flyer,body.pr-flyer #flyer *{visibility:visible}
+  body.pr-flyer #flyer{display:block;position:absolute;inset:0 0 auto 0;padding:18mm 16mm;background:#fff;color:#000;font-family:inherit}
+  .noprint,.toast{display:none!important}
+  #flyer .fl-head{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #4b5b2a;padding-bottom:10px}
+  #flyer .fl-head img{width:90px;height:90px;object-fit:contain}
+  #flyer .fl-t{text-align:center;line-height:1.8;font-size:13pt}
+  #flyer h1{text-align:center;font-size:30pt;margin:18px 0 6px;color:#3a4820}
+  #flyer .fl-sub{text-align:center;font-size:14pt;margin:0 0 16px}
+  #flyer .fl-body{display:flex;gap:24px;align-items:center;justify-content:center;margin:10px 0}
+  #flyer .fl-qr{width:75mm;text-align:center;font-size:12pt}
+  #flyer .fl-qr svg{width:100%;height:auto}
+  #flyer .fl-steps{flex:1;font-size:14pt;line-height:2}
+  #flyer .fl-steps h3{margin:0 0 6px;font-size:17pt;color:#3a4820}
+  #flyer .fl-url{text-align:center;font-size:15pt;border:2px dashed #a97c27;border-radius:10px;padding:10px;margin:14px 0;word-break:break-all}
+  #flyer .fl-foot{text-align:center;font-size:13pt;margin-top:14px}
+}
+
+a.btn{text-decoration:none}
+.rc-kid{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.rc-line{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.88rem;color:var(--mut);margin-top:2px}
+.rc-line i{font-style:normal;color:var(--ink)}
+.rc-st{display:inline-block;margin-top:6px;background:var(--ok-soft);color:var(--ok);border-radius:99px;padding:1px 12px;font-size:.8rem;font-weight:700}
+.rc-st.w{background:var(--warn-soft);color:var(--warn)}
+@media(max-width:860px){.nav{width:auto}}
+.ghost{white-space:nowrap}
+@media(max-width:600px){.ghost{padding:6px 10px;font-size:.85rem}.top .in{gap:8px;padding:0 12px}.brand{min-width:0}}
