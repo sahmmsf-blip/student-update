@@ -24,7 +24,7 @@ async function rpc(fn,args){
   }
   return j;
 }
-const ERR={not_found:"البيانات غير مطابقة. تأكد من الرقم الوطني وتاريخ الميلاد.",locked:"تم تجاوز عدد المحاولات. حاول لاحقاً.",already_submitted:"تم تحديث بيانات هذا الطالب مسبقاً.",consent_required:"يجب الموافقة على التعهد للمتابعة.",invalid:"تحقق من الحقول المدخلة.",closed:"باب تحديث البيانات مغلق حالياً.",weak:"الرمز السري يجب ألا يقل عن 8 أحرف (للرمز المؤقت من المسؤول 4 أحرف).",bad_nid:"الرقم الوطني يجب أن يتكون من 10 أرقام.",duplicate:"هذا الرقم الوطني مستخدم لمستخدم آخر.",not_submitted:"لا يمكن طلب تعديل قبل حفظ البيانات أولاً.",not_sibling:"هذا الطالب لا يشترك مع الطالب الأول في اسم الأب الثلاثي (اسم الأب والجد والعائلة)، فلا يمكن إضافته من هذا الدخول. إن كان أخاً له فتواصل مع المرشد التربوي (0786199363) لتصحيح الاسم، أو ادخل برقمه الوطني من الصفحة الرئيسية."};
+const ERR={not_found:"البيانات غير مطابقة. تأكد من الرقم الوطني وتاريخ الميلاد.",locked:"تم تجاوز عدد المحاولات. حاول لاحقاً.",already_submitted:"تم تحديث بيانات هذا الطالب مسبقاً.",consent_required:"يجب الموافقة على التعهد للمتابعة.",invalid:"تحقق من الحقول المدخلة.",closed:"باب تحديث البيانات مغلق حالياً.",weak:"الرمز السري يجب ألا يقل عن 8 أحرف (للرمز المؤقت من المسؤول 4 أحرف).",bad_nid:"الرقم الوطني يجب أن يتكون من 10 أرقام.",duplicate:"هذا الرقم الوطني مستخدم لمستخدم آخر.",not_submitted:"لا يمكن طلب تعديل قبل حفظ البيانات أولاً.",not_sibling:"هذا الطالب لا يشترك مع الطالب الأول في اسم الأب الثلاثي (اسم الأب والجد والعائلة)، فلا يمكن إضافته من هذا الدخول. إن كان أخاً له فتواصل مع المرشد التربوي في المدرسة لتصحيح الاسم، أو ادخل برقمه الوطني من الصفحة الرئيسية."};
 
 function applySettings(){ $("#sch").textContent=SET.school_name||"تحديث بيانات الطلبة"; document.title=(SET.school_name||"")+" — تحديث بيانات الطلبة"; }
 const ICON={
@@ -72,7 +72,7 @@ async function go(){
   <div class="banner"><div class="b"><div class="ic">${closed?ICON.lock:ICON.spark}</div><div><b>${closed?"باب تحديث البيانات مغلق حالياً":esc(SET.announcement||"حدّث بيانات التواصل لابنك مرة واحدة فقط")}</b><span>هذه البيانات تُجمع لأغراض العملية التعليمية والتواصل الرسمي بين المدرسة وولي الأمر فقط</span></div></div></div>
   <section class="hero2"><div class="txt">
     <div class="chips"><span>${ICON.bolt}دقيقتان فقط</span><span>${ICON.shield}بيانات محمية</span><span>${ICON.book}للأغراض التعليمية</span></div>
-    <div class="credits"><div><span>المطوّر</span><b>أ. سهم العجارمة</b></div><div><span>المرشد التربوي</span><b>أ. إيهاب أبو دية</b><a href="tel:0786199363" dir="ltr">0786199363</a></div></div></div>
+    <div class="credits"><div><span>المطوّر</span><b>أ. سهم العجارمة</b></div><div><span>مدير المدرسة</span><b>أ. ناجح المحاميد</b></div><div><span>المرشد التربوي</span><b>أ. إيهاب أبو دية</b></div></div></div>
    <div class="lcard" id="lc">${loginForm()}</div></section>
   <section class="wrap" id="how" style="max-width:1240px;padding:10px 18px 0"><div class="card"><h2>كيف تعمل؟</h2><div class="sub">ثلاث خطوات بسيطة</div>
     <div class="grid2" style="grid-template-columns:repeat(3,1fr)">
@@ -284,7 +284,6 @@ function parentDone(){
 }
 
 /* =================== الإدارة (الدخول موحّد من النموذج الرئيسي) =================== */
-const COUNSELOR_PHONE="0786199363";
 let ALL=[], REQ=[], TAB="overview", F={q:"",status:"",grade:"",section:"",nat:"",ag:"",wa:""}, LIM=100;
 const isAdmin=()=>staff&&staff.role==="admin";
 const isMgr=()=>staff&&(staff.role==="admin"||staff.role==="counselor");
@@ -533,7 +532,7 @@ async function share(){
     f.innerHTML=`<div class="fl-head"><img src="img/moe.jpg" alt=""><div class="fl-t">المملكة الأردنية الهاشمية<br><b>وزارة التربية والتعليم</b><br>مديرية التربية والتعليم للواء وادي السير<br><b>${esc(SET.school_name)}</b></div><img src="img/school.jpg" alt=""></div>
      <h1>بوابة تحديث بيانات الطلبة</h1><p class="fl-sub">نرجو من أولياء الأمور الكرام تحديث بيانات التواصل لأبنائهم، لأغراض العملية التعليمية والتواصل الرسمي مع المدرسة.</p>
      <div class="fl-body"><div class="fl-qr">${await qrSvg(u)}<div>امسح الرمز بكاميرا الهاتف</div></div><div class="fl-steps"><h3>كيف أحدّث بيانات ابني؟</h3><ol><li>امسح رمز QR أو افتح الرابط أدناه.</li><li>أدخل <b>الرقم الوطني للطالب</b> وتاريخ ميلاده.</li><li>لديك أكثر من ابن؟ اضغط <b>«إضافة طالب آخر»</b> من داخل الصفحة.</li><li>أدخل بيانات التواصل ثم اضغط «حفظ» وأكّد التعهد.</li></ol></div></div>
-     <div class="fl-url" dir="ltr">${esc(u)}</div><div class="fl-foot">للاستفسار: المرشد التربوي أ. إيهاب أبو دية — ${COUNSELOR_PHONE}</div>`;
+     <div class="fl-url" dir="ltr">${esc(u)}</div><div class="fl-foot">للاستفسار: التواصل مع المرشد التربوي أ. إيهاب أبو دية في المدرسة</div>`;
     document.body.appendChild(f); printEl("pr-flyer"); };
 }
 
